@@ -1,6 +1,6 @@
 {
     "name": "ultimate_minesweeper",
-    "version": "0.0.2",
+    "version": "0.0.27",
     "description": "A new take on the classic windows game. can you get your safely though the minefield.",
     "private": true,
     "scripts": {

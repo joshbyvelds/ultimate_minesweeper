@@ -1,0 +1,14 @@
+.game_wrapper{
+    width:200px;
+    line-height: 10px;
+    border: solid 1px black;
+}
+
+.block{
+    display:inline-block;
+    width: 20px;
+    height: 20px;
+    border: solid 1px black;
+    box-sizing: border-box;
+    cursor:pointer;
+}
