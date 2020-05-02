@@ -2,6 +2,10 @@
 // Compile Settings
 const debug = true;
 
+// Modes
+const SEARCH:number = 1
+const FLAG:number = 2;
+
 // -------------- INTERFACES ------------------ //
 
 interface Tile{
@@ -14,6 +18,7 @@ interface Tile{
 // -------------- GAME CLASS ------------------ //
 
 class Minesweeper{
+    private mode:number;
     private rows:number;
     private cols:number;
     private mines:number;
@@ -23,6 +28,7 @@ class Minesweeper{
 
     constructor(rows:number, cols:number, mines:number){
         f("Minesweeper Constructor", [rows,cols,mines]);
+        this.mode = SEARCH;
         this.rows = rows;
         this.cols = cols;
         this.mines = mines;
@@ -36,10 +42,8 @@ class Minesweeper{
         // Build Grid..
         while(y < this.rows){
             while(x < this.cols){
-                // TODO: Finish this if..
                 let mine:boolean = false;
                 if(mines_left > 0 && (this.randomBool(33) || ((this.rows * this.cols) - ((y * this.rows) + x)) === mines_left )){
-                    m("Test Mine");
                     mine = true;
                     mines_left--;
                 }
@@ -55,12 +59,13 @@ class Minesweeper{
             y++;
         }
 
-        v(this.field);
+        //v(this.field);
 
         this.setupEventHandlers();
     }
 
-    private randomBool(chance:number):boolean{
+
+    private randomBool(chance:number = 50):boolean{
         let r:boolean = !!((Math.random() * 100) <= chance);
         return r;
     }
@@ -75,36 +80,92 @@ class Minesweeper{
     }
 
     private clickedBlock(event){
-        f("clickedBlock", [event]);
+        f("clickedBlock");
         const target = event.target;
         const id:number = this.getTileId(parseInt(event.target.getAttribute('data-x')), parseInt(event.target.getAttribute('data-y')));
         this.selectedTile = this.field[id];
-        this.searchSurroundingTiles(this.selectedTile);
+
+
+        if(this.mode === SEARCH){
+            // check if we clicked a mine..
+            if(this.selectedTile.mine){
+                this.clickedMine();
+                return;
+            }
+
+            event.target.innerHTML = this.searchSurroundingTiles(id).toString();
+        }
     }
 
     private getTileId(x:number, y:number):number {
         return (y * this.rows) + x;
     }
 
-    private searchSurroundingTiles(tile:Tile){
-        f("searchSurroundingTiles", [tile]);
-        let result;
-        // top left
+    private clickedMine(){
+        f("clickedMine");
+        a("You Lose!");
+    }
 
+    private searchSurroundingTiles(tileId:number){
+        f("searchSurroundingTiles");
 
-        //top
-
-        // top right
-
-        // right
-
-        // bottom right
-
-        // bottom
-
-        // bottom left
+        let result:number = 0;
 
         // left
+        if(tileId % this.cols !== 0){
+            if(this.field[tileId - 1].mine){
+                result++;
+            }
+        }
+
+        // right
+        if(tileId % this.cols !== (this.cols - 1)){
+            if(this.field[tileId + 1].mine){
+                result++;
+            }
+        }
+
+        //top
+        if(tileId > this.cols){
+            if(this.field[tileId - this.cols].mine){
+                result++;
+            }
+
+            // top left
+            if(tileId % this.cols !== 0){
+                if(this.field[tileId - this.cols - 1].mine){
+                    result++;
+                }
+            }
+
+            //top right
+            if(tileId % this.cols !== (this.cols - 1)){
+                if(this.field[tileId - this.cols - 1].mine){
+                    result++;
+                }
+            }
+        }
+
+        // bottom
+        if(tileId < (this.rows * this.cols) - this.cols){
+            if(this.field[tileId + this.cols].mine){
+                result++;
+            }
+
+            // bottom left
+            if(tileId % this.cols !== 0){
+                if(this.field[tileId + this.cols - 1].mine){
+                    result++;
+                }
+            }
+
+            // bottom right
+            if(tileId % this.cols !== (this.cols - 1)){
+                if(this.field[tileId + this.cols + 1].mine){
+                    result++;
+                }
+            }
+        }
 
         return result;
     }
@@ -115,12 +176,16 @@ class Minesweeper{
 function f(function_name:string, params = []){
     let param_list:string = "";
     for(const param in params){
-        param_list += "," + param;
+        param_list += "," + param.toString();
     }
 
     param_list = param_list.substring(1);
 
     console.log(function_name + "(" + param_list + ")");
+}
+
+function a(message:string){
+    alert(message);
 }
 
 function m(message:string){

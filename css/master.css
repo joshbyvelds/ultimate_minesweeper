@@ -4,11 +4,35 @@
     border: solid 1px black;
 }
 
-.block{
+.next_solder_ui_wrapper{
+    padding: 5px 0;
+}
+
+.solider_icon{
+    display: inline-block;
+    width: 25px;
+    height: 25px;
+    background-image: url("../images/helmet_icon.png");
+    background-size: contain;
+    vertical-align: middle;
+}
+
+progress{
+    display: inline-block;
+    width: calc(192px - 25px);
+    height: 12px;
+    margin-left: 10px;
+    vertical-align: middle;
+}
+
+.block {
     display:inline-block;
     width: 20px;
     height: 20px;
     border: solid 1px black;
     box-sizing: border-box;
+    text-align: center;
+    line-height: 18px;
+    vertical-align: top;
     cursor:pointer;
 }
